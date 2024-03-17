@@ -1,0 +1,19 @@
+version: "3.8"
+services:            
+    mysql-server-standalone:
+        image: mysql:8.0.17
+        restart: always
+        environment:
+          MYSQL_ROOT_PASSWORD: nuiivozer4896gre89g9er
+        ports:
+          - "3307:3306"
+        volumes:
+            - ./data:/var/lib/mysql
+            - "./mysql/script.sql:/docker-entrypoint-initdb.d/1.sql"
+        container_name: mysql_server-standalone
+        networks:
+            - mysql-network
+            
+networks:
+    mysql-network:
+        driver: bridge

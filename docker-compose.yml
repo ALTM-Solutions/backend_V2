@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+    ressources-relationnelles:
+        container_name: ressources-relationnelles
+        build:
+            context: ressourcesRelationnelles/.
+            dockerfile: Dockerfile
+        image: ressources-relationnelles:latest
+        ports:
+            - "8080:8080"
+        restart: always
+        networks:
+            - spring-network
+        depends_on:
+            - mysql-server
+            
+    mysql-server:
+        image: mysql:8.0.17
+        restart: always
+        environment:
+          MYSQL_ROOT_PASSWORD: nuiivozer4896gre89g9er
+        ports:
+          - "3307:3306"
+        volumes:
+            - ./mysql_server/data:/var/lib/mysql
+            - "./mysql_server/mysql/script.sql:/docker-entrypoint-initdb.d/1.sql"
+        container_name: mysql_server
+        networks:
+            - spring-network
+            
+networks:
+    spring-network:
+        driver: bridge
