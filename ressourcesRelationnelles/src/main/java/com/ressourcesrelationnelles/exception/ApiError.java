@@ -9,7 +9,9 @@ import java.util.List;
 public class ApiError {
 
     private HttpStatus status;
+
     private String message;
+
     private List<String> errors;
 
     public ApiError(final HttpStatus status, final String message,

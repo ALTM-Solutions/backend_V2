@@ -27,7 +27,4 @@ public class UtilisateurService implements IUtilisateurService{
         Role role = roleRepository.findByNom("citoyen").get(0);
         return new Utilisateur(nom,prenom,adresse_mail,mot_de_passe,chemin_photo_profil,role);
     }
-
-
-
 }

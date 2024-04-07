@@ -2,7 +2,6 @@ package com.ressourcesrelationnelles.dto;
 
 public class CreatedRessourceDto {
     private String texte;
-
     private String nomRessource;
 
     private Integer idUtilisateur;

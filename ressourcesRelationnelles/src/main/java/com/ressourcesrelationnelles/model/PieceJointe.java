@@ -35,6 +35,10 @@ public class PieceJointe {
     @JsonIgnore
     private List<Message> messages;
 
+    @OneToMany(mappedBy = "pieceJointe")
+    @JsonIgnore
+    private List<Reponse> reponses;
+
     public PieceJointe(Integer id, String cheminPieceJointe) {
         this.id = id;
         this.cheminPieceJointe = cheminPieceJointe;

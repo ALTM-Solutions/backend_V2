@@ -3,6 +3,8 @@ package com.ressourcesrelationnelles.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 import java.util.List;
@@ -35,11 +37,11 @@ public class Ressources {
     private String nomRessource;
 
     @OneToMany(mappedBy = "ressources")
-    @JsonIgnore
     private List<Commentaire> commentaires;
 
     @ManyToOne
     @JoinColumn(name = "utilisateur_id", nullable = false)
+    @JsonIgnore
     private Utilisateur utilisateur;
 
     @ManyToOne

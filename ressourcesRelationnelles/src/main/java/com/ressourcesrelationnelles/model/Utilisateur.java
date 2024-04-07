@@ -3,6 +3,8 @@ package com.ressourcesrelationnelles.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 import java.util.List;
@@ -26,22 +28,29 @@ public class Utilisateur {
     private String adresseMail;
 
     @Column(name = "mot_de_passe")
+    @JsonIgnore
     private String motDePasse;
 
     @Column(name = "chemin_photo_profil")
     private String cheminPhotoProfil;
 
     @Column(name = "date_desactive")
+    @JsonIgnore
     private Date dateDesactive;
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
+    @JsonIgnore
     private Role role;
 
     @OneToMany(mappedBy = "utilisateur")
     //Quand appel via CRUD, ne l'affiche pas par défaut ; provoque une boucle infinie
     @JsonIgnore
     private List<Commentaire> commentaires;
+
+    @OneToMany(mappedBy = "utilisateur")
+    @JsonIgnore
+    private List<Reponse> reponses;
 
     @OneToMany(mappedBy = "utilisateur")
     @JsonIgnore

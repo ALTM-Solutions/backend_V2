@@ -1,5 +1,6 @@
 package com.ressourcesrelationnelles.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -36,6 +37,7 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "ressource_id", nullable = false)
+    @JsonIgnore
     private Ressources ressources;
 
     @ManyToOne
@@ -50,6 +52,38 @@ public class Message {
 
     public Message() {
 
+    }
+
+    public Utilisateur getEnvoyeur() {
+        return envoyeur;
+    }
+
+    public void setEnvoyeur(Utilisateur envoyeur) {
+        this.envoyeur = envoyeur;
+    }
+
+    public Utilisateur getRecepteur() {
+        return recepteur;
+    }
+
+    public void setRecepteur(Utilisateur recepteur) {
+        this.recepteur = recepteur;
+    }
+
+    public Ressources getRessources() {
+        return ressources;
+    }
+
+    public void setRessources(Ressources ressources) {
+        this.ressources = ressources;
+    }
+
+    public PieceJointe getPieceJointe() {
+        return pieceJointe;
+    }
+
+    public void setPieceJointe(PieceJointe pieceJointe) {
+        this.pieceJointe = pieceJointe;
     }
 
     public Integer getId() {

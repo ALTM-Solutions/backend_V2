@@ -7,5 +7,5 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Map;
 
 public interface IRessourcesService {
-    Ressources createFromJson(CreatedRessourceDto ressourceDto, MultipartFile file);
+    Ressources createFromForm(CreatedRessourceDto ressourceDto, MultipartFile file,String uri, String port);
 }

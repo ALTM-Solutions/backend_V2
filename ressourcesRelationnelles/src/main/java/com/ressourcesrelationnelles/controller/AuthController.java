@@ -39,27 +39,27 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtGenerator jwtGenerator;
+
     @PostMapping("login")
     public ResponseEntity<ResponseLoginDto> login(@RequestBody LoginDto loginDTO) {
-        if(userRepo.existsByAdresseMail(loginDTO.getEmail())){
+        if (userRepo.existsByAdresseMail(loginDTO.getEmail())) {
 
             Utilisateur user = userRepo.findByAdresseMail(loginDTO.getEmail()).orElseThrow();
             user.getRole().setRoleGranted();
             UserType userType = user.getRole().getUserType();
 
             customUserDetailsService.setUserType(userType);
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String token = jwtGenerator.generateToken(authentication,userType.toString());
+            String token = jwtGenerator.generateToken(authentication, userType.toString());
             ResponseLoginDto responseDto = new ResponseLoginDto();
             responseDto.setSuccess(true);
             responseDto.setMessage("login successful !!");
             responseDto.setToken(token);
             responseDto.setDetails(user.getAdresseMail(), user.getId());
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
-        }else{
+        } else {
             ResponseLoginDto responseDto = new ResponseLoginDto();
             responseDto.setSuccess(false);
             responseDto.setMessage("User not found!");
@@ -69,10 +69,10 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<ResponseRegisterDto> register(@RequestBody RegisterDto registerData){
+    public ResponseEntity<ResponseRegisterDto> register(@RequestBody RegisterDto registerData) {
 
         ResponseRegisterDto response = new ResponseRegisterDto();
-        if(userRepo.existsByAdresseMail(registerData.getAdresseMail())){
+        if (userRepo.existsByAdresseMail(registerData.getAdresseMail())) {
             response.setMessage("Email is already registered !!");
             response.setSuccess(false);
             return new ResponseEntity<ResponseRegisterDto>(response, HttpStatus.BAD_REQUEST);
@@ -89,11 +89,11 @@ public class AuthController {
             userRepo.saveAndFlush(user);
             response.setSuccess(true);
             response.setMessage("Profile created Successfully");
-            return new ResponseEntity<ResponseRegisterDto>(response,HttpStatus.CREATED);
-        }catch (IndexOutOfBoundsException e){
+            return new ResponseEntity<ResponseRegisterDto>(response, HttpStatus.CREATED);
+        } catch (IndexOutOfBoundsException e) {
             response.setSuccess(false);
             response.setMessage("Profile not created");
-            return new ResponseEntity<ResponseRegisterDto>(response,HttpStatus.CREATED);
+            return new ResponseEntity<ResponseRegisterDto>(response, HttpStatus.CREATED);
         }
 
     }

@@ -22,10 +22,10 @@ public class RessourcesService implements IRessourcesService {
     @Autowired
     private IUtilisateurRepository utilisateurRepository;
 
-    public Ressources createFromJson(CreatedRessourceDto ressourceDto, MultipartFile file){
+    public Ressources createFromForm(CreatedRessourceDto ressourceDto, MultipartFile file, String uri, String port){
         Ressources ressources = new Ressources();
         ressources.setNomRessource(ressourceDto.getNomRessource());
-        ressources.setPieceJointe(fileStorageService.createPieceJointe(file));
+        ressources.setPieceJointe(fileStorageService.createPieceJointe(file,uri,port));
         ressources.setText(ressourceDto.getTexte());
         ressources.setUtilisateur(utilisateurRepository.getReferenceById(ressourceDto.getIdUtilisateur()));
         ressources.setDatePublication(new Date());

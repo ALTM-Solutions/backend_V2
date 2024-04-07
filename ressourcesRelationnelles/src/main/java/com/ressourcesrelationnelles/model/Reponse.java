@@ -1,5 +1,6 @@
 package com.ressourcesrelationnelles.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -26,6 +27,19 @@ public class Reponse {
     @Column(name = "date")
     private Date date;
 
+    @ManyToOne
+    @JoinColumn(name = "piece_jointe_id")
+    private PieceJointe pieceJointe;
+
+    @ManyToOne
+    @JoinColumn(name = "utilisateur_id", nullable = false)
+    private Utilisateur utilisateur;
+
+    @ManyToOne
+    @JoinColumn(name = "commentaire_id", nullable = false)
+    @JsonIgnore
+    private Commentaire commentaire;
+
     public Reponse(Integer id, String reponse, Date date) {
         this.id = id;
         this.reponse = reponse;
@@ -33,6 +47,30 @@ public class Reponse {
     }
 
     public Reponse() {
+    }
+
+    public PieceJointe getPieceJointe() {
+        return pieceJointe;
+    }
+
+    public void setPieceJointe(PieceJointe pieceJointe) {
+        this.pieceJointe = pieceJointe;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
+    public Commentaire getCommentaire() {
+        return commentaire;
+    }
+
+    public void setCommentaire(Commentaire commentaire) {
+        this.commentaire = commentaire;
     }
 
     public Integer getId() {

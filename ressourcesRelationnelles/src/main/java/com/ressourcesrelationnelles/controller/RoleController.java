@@ -15,13 +15,13 @@ public class RoleController {
     private IRoleRepository roleRepository;
 
     @GetMapping
-    public List<Role> getAll(){
+    public List<Role> getAll() {
         return roleRepository.findAll();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) //renvoi que c'est crée = 201
-    public void create(@RequestBody final Role role){
+    public void create(@RequestBody final Role role) {
         roleRepository.saveAndFlush(role);
     }
 }

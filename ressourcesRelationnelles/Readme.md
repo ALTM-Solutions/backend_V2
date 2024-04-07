@@ -11,12 +11,12 @@ Ce projet utilise Docker pour gérer les conteneurs. Voici comment le lancer :
 1. Depuis le répertoire `backend` `mysql_server`, ouvrez un terminal (par exemple, GitBash) et exécutez la commande suivante :
    `docker-compose up -d`
 
-   - L'option `-d` signifie "détaché", ce qui permet de lancer les conteneurs en arrière-plan.
-   - Le fichier `docker-compose.yml` définit la composition des conteneurs pour notre architecture.
+    - L'option `-d` signifie "détaché", ce qui permet de lancer les conteneurs en arrière-plan.
+    - Le fichier `docker-compose.yml` définit la composition des conteneurs pour notre architecture.
 - Vous verrez le lancement dans l'application Docker Desktop :
 
   | Name        | Image        | Status       |
-       |-------------|--------------|--------------|
+         |-------------|--------------|--------------|
   | mysql.serv  | Running (1/1)|              |
 
 2. Dans IntelliJ :

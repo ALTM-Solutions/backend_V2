@@ -1,9 +1,11 @@
 package com.ressourcesrelationnelles.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "commentaire")
@@ -28,11 +30,15 @@ public class Commentaire {
 
     @ManyToOne
     @JoinColumn(name = "ressource_id", nullable = false)
+    @JsonIgnore
     private Ressources ressources;
 
     @ManyToOne
     @JoinColumn(name = "piece_jointe_id")
     private PieceJointe pieceJointe;
+
+    @OneToMany(mappedBy = "commentaire")
+    private List<Reponse> reponses;
 
     public Commentaire(Integer id, String contenu, Date dateCommentaire) {
         this.id = id;
@@ -42,6 +48,38 @@ public class Commentaire {
 
     public Commentaire() {
 
+    }
+
+    public List<Reponse> getReponses() {
+        return reponses;
+    }
+
+    public void setReponses(List<Reponse> reponses) {
+        this.reponses = reponses;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
+    public Ressources getRessources() {
+        return ressources;
+    }
+
+    public void setRessources(Ressources ressources) {
+        this.ressources = ressources;
+    }
+
+    public PieceJointe getPieceJointe() {
+        return pieceJointe;
+    }
+
+    public void setPieceJointe(PieceJointe pieceJointe) {
+        this.pieceJointe = pieceJointe;
     }
 
     public Integer getId() {

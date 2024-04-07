@@ -11,6 +11,7 @@ public class RoleService implements IRoleService {
 
     @Autowired
     private IRoleRepository roleRepository;
+
     public void createIfNotExist(UserType userType){
 
         if(!roleRepository.existsByNom(userType.toString())){
@@ -18,7 +19,6 @@ public class RoleService implements IRoleService {
             roleRepository.saveAndFlush(role);
         }
     }
-
 
     public void createAllUserType(){
         for(UserType type : UserType.values()){
