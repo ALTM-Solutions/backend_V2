@@ -14,7 +14,6 @@ public class AdvisorException {
             FileStorageException.class,
             MyFileNotFoundException.class
     })
-
     public ResponseEntity<Object> handleAll(final Exception ex, final WebRequest request) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getLocalizedMessage(), "error occurred");
         return new ResponseEntity<Object>(apiError, new HttpHeaders(),

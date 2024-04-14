@@ -1,6 +1,8 @@
 package com.ressourcesrelationnelles.controller;
 
+import com.ressourcesrelationnelles.config.FileStorageProperties;
 import com.ressourcesrelationnelles.config.HostProperties;
+import com.ressourcesrelationnelles.exception.FileStorageException;
 import com.ressourcesrelationnelles.model.UploadFileResponse;
 import com.ressourcesrelationnelles.service.FileStorageService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,33 +27,19 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/public/file")
 public class FileController {
+
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
-    private final String port;
-    private final String uri;
+
     @Autowired
     private FileStorageService fileStorageService;
 
+    private final String port;
+
+    private final String uri;
     @Autowired
     public FileController(HostProperties hostProperties) {
         this.port = hostProperties.getPort();
         this.uri = hostProperties.getUri();
-    }
-
-    @ResponseStatus(value = HttpStatus.CREATED)
-    @PostMapping("/uploadFile")
-    public UploadFileResponse uploadFile(@RequestPart("file") MultipartFile file) {
-        String fileName = fileStorageService.storeFile(file);
-
-        System.out.println(uri + port);
-        String fileDownloadUri = uri + ":" + port + "/api/public/file/downloadFile/" + fileName;
-
-        return new UploadFileResponse(fileName, fileDownloadUri, fileStorageService.getFileType(fileName), file.getSize());
-    }
-
-    @ResponseStatus(value = HttpStatus.CREATED)
-    @PostMapping("/uploadMultipleFiles")
-    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
-        return Arrays.asList(files).stream().map(file -> uploadFile(file)).collect(Collectors.toList());
     }
 
     @GetMapping("/downloadFile/{fileName:.+}")
@@ -60,30 +50,25 @@ public class FileController {
         // Try to determine file's content type
         String contentType = null;
         try {
+
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+
         } catch (IOException ex) {
+
             logger.info("Could not determine file type.");
+
         }
 
         // Fallback to the default content type if type could not be determined
-        if (contentType == null) {
+        if(contentType == null) {
             contentType = "application/octet-stream";
         }
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 
-    @ResponseStatus(value = HttpStatus.OK)
-    @DeleteMapping("/deleteFile/{fileName:.+}")
-    public String deleteFile(@PathVariable String fileName) {
-        // TODO : A supprimer, tout doit être géré depuis les "PieceJointe"
-        return fileStorageService.deleteFile(fileName);
-    }
-
-    @ResponseStatus(value = HttpStatus.OK)
-    @GetMapping("/findFile/{fileName:.+}")
-    // TODO : Pas nécessaire ?
-    public String findFileExist(@PathVariable String fileName) {
-        return fileStorageService.findIfExist(fileName);
-    }
 }
 

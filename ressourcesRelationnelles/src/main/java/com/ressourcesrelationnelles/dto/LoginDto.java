@@ -3,7 +3,6 @@ package com.ressourcesrelationnelles.dto;
 public class LoginDto {
 
     private String email;
-
     private String password;
 
     public LoginDto(String email, String password) {

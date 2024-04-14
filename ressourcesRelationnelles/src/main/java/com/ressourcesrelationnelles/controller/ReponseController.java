@@ -2,25 +2,41 @@ package com.ressourcesrelationnelles.controller;
 
 
 import com.ressourcesrelationnelles.config.HostProperties;
+import com.ressourcesrelationnelles.config.JwtGenerator;
+import com.ressourcesrelationnelles.model.Commentaire;
 import com.ressourcesrelationnelles.model.Reponse;
+import com.ressourcesrelationnelles.model.Utilisateur;
 import com.ressourcesrelationnelles.repository.IReponseRepository;
+import com.ressourcesrelationnelles.repository.IUtilisateurRepository;
+import com.ressourcesrelationnelles.service.FileStorageService;
 import com.ressourcesrelationnelles.service.ReponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/public/reponse")
 public class ReponseController {
-    private final String port;
-    private final String uri;
+
     @Autowired
     private IReponseRepository reponseRepository;
+
     @Autowired
     private ReponseService reponseService;
 
+    @Autowired
+    private JwtGenerator jwtGenerator;
+    @Autowired
+    private FileStorageService fileStorageService;
+    @Autowired
+    private IUtilisateurRepository utilisateurRepository;
+
+    private final String port;
+
+    private final String uri;
     @Autowired
     public ReponseController(HostProperties hostProperties) {
         this.port = hostProperties.getPort();
@@ -29,13 +45,26 @@ public class ReponseController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestParam("text") String text, @RequestParam("idCommentaire") Integer id_commentaire, @RequestParam("idUtilisateur") Integer id_utilisateur, @RequestParam("file") MultipartFile file) {
-        Reponse reponse = reponseService.createFromForm(text, id_commentaire, id_utilisateur, file, uri, port);
+    public void create(@RequestParam("text") String text, @RequestParam("idCommentaire") Integer id_commentaire,
+                       @RequestHeader("Authorization") String token, @RequestParam("file") MultipartFile file){
+        String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
+        Utilisateur utilisateur = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));
+        Reponse reponse = reponseService.createFromForm(text, id_commentaire, utilisateur.getId(),file, uri, port);
         reponseRepository.saveAndFlush(reponse);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable Integer id, @RequestHeader("Authorization") String token) throws Exception{
+        Reponse reponse = reponseRepository.getReferenceById(id);
+
+        String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
+        Utilisateur utilisateur = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));
+        if(!utilisateur.getId().equals(reponse.getUtilisateur().getId())){
+            throw new Exception("l'utilisateur n'a pas le droit de modifier cette ressource");
+        }
+        if(reponse.getPieceJointe() != null){
+            fileStorageService.deleteFileFromUrl(reponse.getPieceJointe().getCheminPieceJointe());
+        }
         reponseRepository.deleteById(id);
     }
 

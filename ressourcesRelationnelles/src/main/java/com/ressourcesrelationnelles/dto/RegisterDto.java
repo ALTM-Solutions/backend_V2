@@ -2,7 +2,6 @@ package com.ressourcesrelationnelles.dto;
 
 public class RegisterDto {
     private String adresseMail;
-
     private String password;
 
     private String nom;
@@ -11,10 +10,11 @@ public class RegisterDto {
 
     private String cheminPhotoProfil;
 
+
     public RegisterDto() {
     }
 
-    public RegisterDto(String adresseMail, String password, String nom, String cheminPhotoProfil, String prenom) {
+    public RegisterDto(String adresseMail, String password, String nom,String cheminPhotoProfil, String prenom) {
         this.adresseMail = adresseMail;
         this.password = password;
         this.nom = nom;

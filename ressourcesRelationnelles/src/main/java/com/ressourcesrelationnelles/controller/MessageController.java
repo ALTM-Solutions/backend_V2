@@ -13,34 +13,41 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/public/message")
 public class MessageController {
-    // TODO : Ici peut - être rajouté une suppression quand les message sont vieux de 1 jour,
-    //  c'est du chat donc pas besoin de conserver ?
-    private final String port;
-    private final String uri;
-    @Autowired
-    private IMessageRepository messageRepository;
-    @Autowired
-    private MessageService messageService;
+    // TODO : Ici peut - être rajouter une suppression quand les message sont vieux de 1 jour,
+    //  c'est du chat donc pas besoinn de conservé ?
 
+    private final String port;
+
+    private final String uri;
     @Autowired
     public MessageController(HostProperties hostProperties) {
         this.port = hostProperties.getPort();
         this.uri = hostProperties.getUri();
     }
 
-    // TODO : GET / READ par rapport à l'utilisateur/ressource pour n'obtenir que les messages sur cette ressource et envoyer par cet utilisateur.
+    @Autowired
+    private IMessageRepository messageRepository;
+
+    @Autowired
+    private MessageService messageService;
+
+    // TODO : GET / READ par rapport à l'utilisateur/ressource pour n'btenir que les message sur cette ressource et envoyé par cette utilisateur.
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestParam("message") String message, @RequestParam("envoyeur") Integer id_envoyeur, @RequestParam("recepteur") Integer id_recepteur, @RequestParam("idRessource") Integer id_ressource, @RequestParam("file") MultipartFile file) {
-        Message m = messageService.createFromForm(message, id_envoyeur, id_recepteur, id_ressource, file, uri, port);
+    public void create(@RequestParam("message") String message, @RequestParam("envoyeur") Integer id_envoyeur, @RequestParam("recepteur") Integer id_recepteur, @RequestParam("idRessource")Integer id_ressource, @RequestParam("file")MultipartFile file){
+
+        Message m = messageService.createFromForm(message,id_envoyeur,id_recepteur,id_ressource,file,uri,port);
         messageRepository.saveAndFlush(m);
+
     }
 
+
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable Integer id){
         // TODO : Suppression des pieceJointe / image / ressource
         messageRepository.deleteById(id);
     }
+
 
 }

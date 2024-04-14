@@ -91,7 +91,8 @@ CREATE TABLE IF NOT EXISTS `ressourcesrelationnelles`.`ressource` (
   CONSTRAINT `fk_ressource_utilisateur1`
     FOREIGN KEY (`utilisateur_id`)
     REFERENCES `ressourcesrelationnelles`.`utilisateur` (`id`)
-	ON DELETE CASCADE)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 6
 DEFAULT CHARACTER SET = utf8mb4
@@ -118,11 +119,13 @@ CREATE TABLE IF NOT EXISTS `ressourcesrelationnelles`.`commentaire` (
   CONSTRAINT `fk_commentaire_ressource1`
     FOREIGN KEY (`ressource_id`)
     REFERENCES `ressourcesrelationnelles`.`ressource` (`id`)
-	ON DELETE CASCADE,
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
   CONSTRAINT `fk_commentaire_utilisateur1`
     FOREIGN KEY (`utilisateur_id`)
     REFERENCES `ressourcesrelationnelles`.`utilisateur` (`id`)
-	ON DELETE CASCADE)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8mb4
@@ -151,15 +154,18 @@ CREATE TABLE IF NOT EXISTS `ressourcesrelationnelles`.`message` (
   CONSTRAINT `fk_message_ressource1`
     FOREIGN KEY (`ressource_id`)
     REFERENCES `ressourcesrelationnelles`.`ressource` (`id`)
-	ON DELETE CASCADE,
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
   CONSTRAINT `fk_message_utilisateur1`
     FOREIGN KEY (`envoyeur`)
     REFERENCES `ressourcesrelationnelles`.`utilisateur` (`id`)
-	ON DELETE CASCADE,
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
   CONSTRAINT `fk_message_utilisateur2`
     FOREIGN KEY (`recepteur`)
     REFERENCES `ressourcesrelationnelles`.`utilisateur` (`id`)
-	ON DELETE CASCADE)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -192,14 +198,16 @@ CREATE TABLE IF NOT EXISTS `ressourcesrelationnelles`.`progression` (
   CONSTRAINT `fk_progression_ressource1`
     FOREIGN KEY (`ressource_id`)
     REFERENCES `ressourcesrelationnelles`.`ressource` (`id`)
-	ON DELETE CASCADE,
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
   CONSTRAINT `fk_progression_type_parcours1`
     FOREIGN KEY (`type_parcours_id`)
     REFERENCES `ressourcesrelationnelles`.`type_parcours` (`id`),
   CONSTRAINT `fk_progression_utilisateur1`
     FOREIGN KEY (`utilisateur_id`)
     REFERENCES `ressourcesrelationnelles`.`utilisateur` (`id`)
-	ON DELETE CASCADE)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -222,7 +230,8 @@ CREATE TABLE IF NOT EXISTS `ressourcesrelationnelles`.`reponse` (
   CONSTRAINT `fk_reponse_commentaire1`
     FOREIGN KEY (`commentaire_id`)
     REFERENCES `ressourcesrelationnelles`.`commentaire` (`id`)
-	ON DELETE CASCADE,
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
   CONSTRAINT `fk_reponse_piece_jointe1`
     FOREIGN KEY (`piece_jointe_id`)
     REFERENCES `ressourcesrelationnelles`.`piece_jointe` (`id`),

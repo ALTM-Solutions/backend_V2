@@ -20,7 +20,6 @@ public class CommentaireService {
 
     @Autowired
     private IUtilisateurRepository utilisateurRepository;
-
     @Autowired
     private FileStorageService fileStorageService;
 

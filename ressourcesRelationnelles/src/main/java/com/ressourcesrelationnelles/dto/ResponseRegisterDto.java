@@ -2,7 +2,6 @@ package com.ressourcesrelationnelles.dto;
 
 public class ResponseRegisterDto {
     private String username;
-
     private int id;
 
     private String token;

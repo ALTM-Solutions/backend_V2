@@ -25,11 +25,25 @@ public class RessourcesService implements IRessourcesService {
     public Ressources createFromForm(CreatedRessourceDto ressourceDto, MultipartFile file, String uri, String port){
         Ressources ressources = new Ressources();
         ressources.setNomRessource(ressourceDto.getNomRessource());
-        ressources.setPieceJointe(fileStorageService.createPieceJointe(file,uri,port));
+        if(!file.isEmpty()) {
+            ressources.setPieceJointe(fileStorageService.createPieceJointe(file, uri, port));
+        }else{
+            ressources.setPieceJointe(null);
+        }
         ressources.setText(ressourceDto.getTexte());
         ressources.setUtilisateur(utilisateurRepository.getReferenceById(ressourceDto.getIdUtilisateur()));
         ressources.setDatePublication(new Date());
         ressources.setDateModification(new Date());
-        return ressourcesRepository.saveAndFlush(ressources);
+        return ressources;
+    }
+
+    public Ressources createFromForm(CreatedRessourceDto ressourceDto){
+        Ressources ressources = new Ressources();
+        ressources.setNomRessource(ressourceDto.getNomRessource());
+        ressources.setText(ressourceDto.getTexte());
+        ressources.setUtilisateur(utilisateurRepository.getReferenceById(ressourceDto.getIdUtilisateur()));
+        ressources.setDatePublication(new Date());
+        ressources.setDateModification(new Date());
+        return ressources;
     }
 }

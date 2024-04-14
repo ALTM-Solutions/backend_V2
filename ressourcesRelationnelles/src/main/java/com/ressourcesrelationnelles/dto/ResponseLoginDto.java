@@ -1,8 +1,7 @@
 package com.ressourcesrelationnelles.dto;
 
-class LoginDetails {
+class LoginDetails{
     String username;
-
     int id;
 
     public String getUsername() {
@@ -21,14 +20,11 @@ class LoginDetails {
         this.id = id;
     }
 }
-
 public class ResponseLoginDto {
     private boolean success;
-
     private String message;
 
     private String token;
-
     private LoginDetails details;
 
     public boolean isSuccess() {

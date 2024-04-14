@@ -31,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Utilisateur user = userRepo.findByAdresseMail(username).orElseThrow(()-> new UsernameNotFoundException("Admin Username "+ username+ "not found"));
+        Utilisateur user = userRepo.findByAdresseMail(username).orElseThrow(()-> new UsernameNotFoundException("Username "+ username+ "not found"));
         user.getRole().setRoleGranted();
         UserType utilisateurType = user.getRole().getUserType();
 //        System.out.println("----- " + utilisateurType.toString());

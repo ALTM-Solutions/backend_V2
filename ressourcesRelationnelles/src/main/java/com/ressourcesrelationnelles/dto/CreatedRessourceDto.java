@@ -6,6 +6,7 @@ public class CreatedRessourceDto {
 
     private Integer idUtilisateur;
 
+
     public String getTexte() {
         return texte;
     }
