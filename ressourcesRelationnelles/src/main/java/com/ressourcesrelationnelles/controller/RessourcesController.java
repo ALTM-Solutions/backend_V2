@@ -10,6 +10,7 @@ import com.ressourcesrelationnelles.repository.IUtilisateurRepository;
 import com.ressourcesrelationnelles.service.FileStorageService;
 import com.ressourcesrelationnelles.service.IRessourcesService;
 import com.ressourcesrelationnelles.service.RessourcesService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/public/ressources")
+@SecurityRequirement(name = "Authorization")
 public class RessourcesController {
     @Autowired
     private IRessourcesRepository ressourcesRepository;
@@ -66,7 +68,7 @@ public class RessourcesController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestParam("texte") String texte,@RequestParam("nomRessource") String nomRessource, @RequestHeader("Authorization") String token , @RequestParam("file")MultipartFile file){
+    public Ressources create(@RequestParam("texte") String texte,@RequestParam("nomRessource") String nomRessource, @RequestHeader("Authorization") String token , @RequestParam("file")MultipartFile file){
 
         String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
         Utilisateur utilisateur = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));;
@@ -74,7 +76,7 @@ public class RessourcesController {
         ressourceDto.setTexte(texte);
         ressourceDto.setNomRessource(nomRessource);
         ressourceDto.setIdUtilisateur(utilisateur.getId());
-        ressourcesRepository.saveAndFlush(ressourcesService.createFromForm(ressourceDto,file,uri,port));
+        return ressourcesRepository.saveAndFlush(ressourcesService.createFromForm(ressourceDto,file,uri,port));
     }
 
     @RequestMapping(value = "/text/{id}",method= RequestMethod.PUT)

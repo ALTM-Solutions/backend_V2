@@ -4,6 +4,7 @@ import com.ressourcesrelationnelles.config.HostProperties;
 import com.ressourcesrelationnelles.model.Message;
 import com.ressourcesrelationnelles.repository.IMessageRepository;
 import com.ressourcesrelationnelles.service.MessageService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/public/message")
+@SecurityRequirement(name = "Authorization")
 public class MessageController {
     // TODO : Ici peut - être rajouter une suppression quand les message sont vieux de 1 jour,
     //  c'est du chat donc pas besoinn de conservé ?

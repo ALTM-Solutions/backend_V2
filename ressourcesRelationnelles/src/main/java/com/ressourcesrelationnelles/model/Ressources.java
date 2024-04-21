@@ -41,7 +41,6 @@ public class Ressources {
 
     @ManyToOne
     @JoinColumn(name = "utilisateur_id", nullable = false)
-    @JsonIgnore
     private Utilisateur utilisateur;
 
     @ManyToOne

@@ -16,13 +16,13 @@ Ce projet utilise Docker pour gérer les conteneurs. Voici comment le lancer :
 - Vous verrez le lancement dans l'application Docker Desktop :
 
   | Name        | Image        | Status       |
-         |-------------|--------------|--------------|
+  |-------------|--------------|--------------|
   | mysql.serv  | Running (1/1)|              |
 
 2. Dans IntelliJ :
 - Ouvrez le dossier `backend/ressourcesRelationnelles`.
 - Naviguez vers `src/main/resources/application.properties`.
-- Commentez la deuxième ligne et décommentez la première ligne.
+- Commentez la première ligne(spring.datasource.url=jdbc:mysql://localhost:3307/ressourcesrelationnelles) et décommentez la deuxième ligne(#spring.datasource.url=jdbc:mysql://mysql-server:3306/ressourcesrelationnelles).
 
 L'application est opérationnelle, vous pouvez la lancer depuis `ResourcesRelationnellesApplication`.
 

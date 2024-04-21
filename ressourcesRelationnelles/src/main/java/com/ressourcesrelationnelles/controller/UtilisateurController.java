@@ -8,6 +8,7 @@ import com.ressourcesrelationnelles.repository.IUtilisateurRepository;
 import com.ressourcesrelationnelles.service.FileStorageService;
 import com.ressourcesrelationnelles.service.IUtilisateurService;
 import com.ressourcesrelationnelles.service.UtilisateurService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/public/utilisateur")
+@SecurityRequirement(name = "Authorization")
 public class UtilisateurController {
 
     private final String port;
@@ -114,12 +116,16 @@ public class UtilisateurController {
 
     //Suppression d'un utilisateur par id
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable Integer id){
+    public void delete(@PathVariable Integer id,@RequestHeader("Authorization") String token){
         Utilisateur utilisateur = utilisateurRepository.getReferenceById(id);
-        if(utilisateur.getCheminPhotoProfil() != null){
-            fileStorageService.deleteFileFromUrl(utilisateur.getCheminPhotoProfil());
+        String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
+        Utilisateur utilisateurConnect = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));
+        if(utilisateurConnect.getId().equals(utilisateur.getId()) || utilisateurConnect.getRole().getUserType().equals(UserType.ADMIN)) {
+            if (utilisateur.getCheminPhotoProfil() != null && !utilisateur.getCheminPhotoProfil().isEmpty()) {
+                fileStorageService.deleteFileFromUrl(utilisateur.getCheminPhotoProfil());
+            }
+            utilisateurRepository.deleteById(id);
         }
-        utilisateurRepository.deleteById(id);
     }
 
 }

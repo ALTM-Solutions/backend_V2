@@ -10,6 +10,7 @@ import com.ressourcesrelationnelles.repository.IReponseRepository;
 import com.ressourcesrelationnelles.repository.IUtilisateurRepository;
 import com.ressourcesrelationnelles.service.FileStorageService;
 import com.ressourcesrelationnelles.service.ReponseService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/public/reponse")
+@SecurityRequirement(name = "Authorization")
 public class ReponseController {
 
     @Autowired
@@ -45,12 +47,12 @@ public class ReponseController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestParam("text") String text, @RequestParam("idCommentaire") Integer id_commentaire,
+    public Reponse create(@RequestParam("text") String text, @RequestParam("idCommentaire") Integer id_commentaire,
                        @RequestHeader("Authorization") String token, @RequestParam("file") MultipartFile file){
         String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
         Utilisateur utilisateur = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));
         Reponse reponse = reponseService.createFromForm(text, id_commentaire, utilisateur.getId(),file, uri, port);
-        reponseRepository.saveAndFlush(reponse);
+        return reponseRepository.saveAndFlush(reponse);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)

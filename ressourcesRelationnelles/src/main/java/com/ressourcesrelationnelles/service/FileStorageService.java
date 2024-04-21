@@ -152,7 +152,7 @@ public class FileStorageService {
 
             // rename file to get unique name
             String fileWithoutExtension = UUID.randomUUID().toString();
-
+            fileName = fileWithoutExtension + "." + extension;
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 

@@ -9,6 +9,7 @@ import com.ressourcesrelationnelles.repository.ICommentaireRepository;
 import com.ressourcesrelationnelles.repository.IUtilisateurRepository;
 import com.ressourcesrelationnelles.service.CommentaireService;
 import com.ressourcesrelationnelles.service.FileStorageService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/public/commentaire")
+@SecurityRequirement(name = "Authorization")
 public class CommentaireController {
 
     // TODO : Supprimer le "idUtilisateur" il doit venir du Token
@@ -47,13 +49,14 @@ public class CommentaireController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestParam("contenu") String contenu,@RequestParam("idRessource") Integer id_ressource,
+    public Commentaire create(@RequestParam("contenu") String contenu,@RequestParam("idRessource") Integer id_ressource,
                        @RequestHeader("Authorization") String token,@RequestParam("file") MultipartFile file){
 
         String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
         Utilisateur utilisateur = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));;
         Commentaire commentaire = commentaireService.createFromJson(contenu,id_ressource,utilisateur.getId(),file,uri,port);
-        commentaireRepository.saveAndFlush(commentaire);
+        return commentaireRepository.saveAndFlush(commentaire);
+
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
