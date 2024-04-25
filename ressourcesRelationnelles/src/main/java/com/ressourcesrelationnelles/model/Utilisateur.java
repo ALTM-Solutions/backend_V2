@@ -3,8 +3,6 @@ package com.ressourcesrelationnelles.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 import java.util.List;
@@ -35,16 +33,14 @@ public class Utilisateur {
     private String cheminPhotoProfil;
 
     @Column(name = "date_desactive")
-    @JsonIgnore
     private Date dateDesactive;
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
-    @JsonIgnore
     private Role role;
 
     @OneToMany(mappedBy = "utilisateur")
-    //Quand appel via CRUD, ne l'affiche pas par défaut ; provoque une boucle infinie
+    // Quand appel via CRUD, ne l'affiche pas par défaut ; provoque une boucle infinie
     @JsonIgnore
     private List<Commentaire> commentaires;
 

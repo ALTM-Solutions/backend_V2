@@ -34,18 +34,21 @@ public class CustomUserDetailsService implements UserDetailsService {
         Utilisateur user = userRepo.findByAdresseMail(username).orElseThrow(()-> new UsernameNotFoundException("Username "+ username+ "not found"));
         user.getRole().setRoleGranted();
         UserType utilisateurType = user.getRole().getUserType();
-//        System.out.println("----- " + utilisateurType.toString());
+        SimpleGrantedAuthority grantedAuthority;
         if(userType==UserType.ADMIN && utilisateurType ==UserType.ADMIN) {
-            SimpleGrantedAuthority adminAuthority = new SimpleGrantedAuthority(UserType.ADMIN.toString());
-            Collection<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(adminAuthority);
-            return new User(user.getAdresseMail(), user.getMotDePasse(), authorities);
-        } if(userType==UserType.CITIZEN && utilisateurType ==UserType.CITIZEN) {
-            SimpleGrantedAuthority teacherAuthority = new SimpleGrantedAuthority(UserType.CITIZEN.toString());
-            Collection<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(teacherAuthority);
-            return new User(user.getAdresseMail(), user.getMotDePasse(), authorities);
+            grantedAuthority = new SimpleGrantedAuthority(UserType.ADMIN.toString());
+        } else if(userType==UserType.CITIZEN && utilisateurType ==UserType.CITIZEN) {
+            grantedAuthority = new SimpleGrantedAuthority(UserType.CITIZEN.toString());
+        } else if (userType==UserType.SUPER_ADMIN && utilisateurType ==UserType.SUPER_ADMIN) {
+            grantedAuthority = new SimpleGrantedAuthority(UserType.SUPER_ADMIN.toString());
+        } else if (userType==UserType.MODERATEUR && utilisateurType ==UserType.MODERATEUR) {
+            grantedAuthority = new SimpleGrantedAuthority(UserType.MODERATEUR.toString());
+        }else{
+            return null;
         }
-        return null;
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(grantedAuthority);
+        return new User(user.getAdresseMail(), user.getMotDePasse(), authorities);
+
     }
 }

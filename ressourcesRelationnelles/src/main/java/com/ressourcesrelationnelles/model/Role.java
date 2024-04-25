@@ -49,8 +49,11 @@ public class Role {
             this.userType = UserType.ADMIN;
         } else if (this.nom.equals(UserType.CITIZEN.toString())) {
             this.userType = UserType.CITIZEN;
+        } else if (this.nom.equals(UserType.MODERATEUR.toString())) {
+            this.userType = UserType.MODERATEUR;
+        } else if (this.nom.equals(UserType.SUPER_ADMIN.toString())) {
+            this.userType = UserType.SUPER_ADMIN;
         }
-
     }
     public UserType getUserType(){
         return this.userType;

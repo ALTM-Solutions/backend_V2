@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/public/message")
+@RequestMapping("/api/citoyens/message")
 @SecurityRequirement(name = "Authorization")
 public class MessageController {
     // TODO : Ici peut - être rajouter une suppression quand les message sont vieux de 1 jour,

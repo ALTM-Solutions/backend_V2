@@ -10,12 +10,25 @@ public class ResponseRegisterDto {
 
     private boolean success;
 
-    public ResponseRegisterDto(String username, int id, String token, String message, boolean success) {
+    private String role;
+
+
+
+    public ResponseRegisterDto(String username, int id, String token, String message, boolean success, String role) {
         this.username = username;
         this.id = id;
         this.token = token;
         this.message = message;
         this.success = success;
+        this.role = role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public ResponseRegisterDto() {

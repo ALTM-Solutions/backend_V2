@@ -5,6 +5,7 @@ import com.ressourcesrelationnelles.config.JwtGenerator;
 import com.ressourcesrelationnelles.model.UserType;
 import com.ressourcesrelationnelles.model.Utilisateur;
 import com.ressourcesrelationnelles.repository.IUtilisateurRepository;
+import com.ressourcesrelationnelles.service.AuthService;
 import com.ressourcesrelationnelles.service.FileStorageService;
 import com.ressourcesrelationnelles.service.IUtilisateurService;
 import com.ressourcesrelationnelles.service.UtilisateurService;
@@ -20,11 +21,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/public/utilisateur")
+@RequestMapping("/api/citoyens/utilisateur")
 @SecurityRequirement(name = "Authorization")
 public class UtilisateurController {
 
@@ -49,6 +51,9 @@ public class UtilisateurController {
     @Autowired
     private JwtGenerator jwtGenerator;
 
+    @Autowired
+    private AuthService authService;
+
     @GetMapping
     public Utilisateur getMe(@RequestHeader("Authorization") String token){
         String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
@@ -63,10 +68,10 @@ public class UtilisateurController {
         String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
         Utilisateur utilisateurConnect = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));
 
-        //On récupère l'objet de la BDD
+        // On récupère l'objet de la BDD
         Utilisateur existingUtilisateur = utilisateurRepository.getReferenceById(id);
         if(utilisateurConnect.getId().equals(existingUtilisateur.getId()) || utilisateurConnect.getRole().getUserType().equals(UserType.ADMIN)){
-            //On crée l'objet à modifier(nouvelles valeurs)
+            // On crée l'objet à modifier(nouvelles valeurs)
             Utilisateur utilisateur = utilisateurService.createFromForm(adresseMail,existingUtilisateur.getAdresseMail(), nom, prenom,file,uri,port);
             if(deleteOldFile){
                if(existingUtilisateur.getCheminPhotoProfil() != null && !existingUtilisateur.getCheminPhotoProfil().isEmpty()){
@@ -74,7 +79,7 @@ public class UtilisateurController {
                    existingUtilisateur.setCheminPhotoProfil("");
                }
             }
-            //Va copier les propriétés de l'objet utilisateur vers la variable existingUtilisateur en ignorant l'id afin de le conserver
+            // Va copier les propriétés de l'objet utilisateur vers la variable existingUtilisateur en ignorant l'id afin de le conserver
             existingUtilisateur.setPrenom(utilisateur.getPrenom());
             existingUtilisateur.setNom(utilisateur.getNom());
             if(!file.isEmpty()){
@@ -112,15 +117,14 @@ public class UtilisateurController {
 
     }
 
-
-
     //Suppression d'un utilisateur par id
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable Integer id,@RequestHeader("Authorization") String token){
         Utilisateur utilisateur = utilisateurRepository.getReferenceById(id);
         String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
         Utilisateur utilisateurConnect = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));
-        if(utilisateurConnect.getId().equals(utilisateur.getId()) || utilisateurConnect.getRole().getUserType().equals(UserType.ADMIN)) {
+        utilisateurConnect.getRole().setRoleGranted();
+        if(authService.IsAuthorize(utilisateur,utilisateurConnect, Arrays.asList(UserType.SUPER_ADMIN,UserType.ADMIN))){
             if (utilisateur.getCheminPhotoProfil() != null && !utilisateur.getCheminPhotoProfil().isEmpty()) {
                 fileStorageService.deleteFileFromUrl(utilisateur.getCheminPhotoProfil());
             }

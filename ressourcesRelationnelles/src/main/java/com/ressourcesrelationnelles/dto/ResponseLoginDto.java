@@ -4,6 +4,16 @@ class LoginDetails{
     String username;
     int id;
 
+    String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -55,9 +65,11 @@ public class ResponseLoginDto {
         return details;
     }
 
-    public void setDetails(String username, Integer id) {
+    public void setDetails(String username, Integer id, String role) {
         this.details = new LoginDetails();
         this.details.setUsername(username);
         this.details.setId(id);
+        this.details.setRole(role);
     }
+
 }

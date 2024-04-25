@@ -5,9 +5,11 @@ import com.ressourcesrelationnelles.config.HostProperties;
 import com.ressourcesrelationnelles.config.JwtGenerator;
 import com.ressourcesrelationnelles.model.Commentaire;
 import com.ressourcesrelationnelles.model.Reponse;
+import com.ressourcesrelationnelles.model.UserType;
 import com.ressourcesrelationnelles.model.Utilisateur;
 import com.ressourcesrelationnelles.repository.IReponseRepository;
 import com.ressourcesrelationnelles.repository.IUtilisateurRepository;
+import com.ressourcesrelationnelles.service.AuthService;
 import com.ressourcesrelationnelles.service.FileStorageService;
 import com.ressourcesrelationnelles.service.ReponseService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -18,8 +20,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
+
 @RestController
-@RequestMapping("/api/public/reponse")
+@RequestMapping("/api/citoyens/reponse")
 @SecurityRequirement(name = "Authorization")
 public class ReponseController {
 
@@ -33,6 +37,8 @@ public class ReponseController {
     private JwtGenerator jwtGenerator;
     @Autowired
     private FileStorageService fileStorageService;
+    @Autowired
+    private AuthService authService;
     @Autowired
     private IUtilisateurRepository utilisateurRepository;
 
@@ -61,7 +67,8 @@ public class ReponseController {
 
         String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
         Utilisateur utilisateur = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));
-        if(!utilisateur.getId().equals(reponse.getUtilisateur().getId())){
+        utilisateur.getRole().setRoleGranted();
+        if(!authService.IsAuthorize(reponse.getUtilisateur(),utilisateur, Arrays.asList(UserType.SUPER_ADMIN,UserType.ADMIN, UserType.MODERATEUR))){
             throw new Exception("l'utilisateur n'a pas le droit de modifier cette ressource");
         }
         if(reponse.getPieceJointe() != null){

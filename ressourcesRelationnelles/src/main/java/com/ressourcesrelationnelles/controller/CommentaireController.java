@@ -4,9 +4,11 @@ import com.ressourcesrelationnelles.config.HostProperties;
 import com.ressourcesrelationnelles.config.JwtGenerator;
 import com.ressourcesrelationnelles.model.Commentaire;
 import com.ressourcesrelationnelles.model.Reponse;
+import com.ressourcesrelationnelles.model.UserType;
 import com.ressourcesrelationnelles.model.Utilisateur;
 import com.ressourcesrelationnelles.repository.ICommentaireRepository;
 import com.ressourcesrelationnelles.repository.IUtilisateurRepository;
+import com.ressourcesrelationnelles.service.AuthService;
 import com.ressourcesrelationnelles.service.CommentaireService;
 import com.ressourcesrelationnelles.service.FileStorageService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -17,11 +19,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/public/commentaire")
+@RequestMapping("/api/citoyens/commentaire")
 @SecurityRequirement(name = "Authorization")
 public class CommentaireController {
 
@@ -47,6 +50,9 @@ public class CommentaireController {
     @Autowired
     private CommentaireService commentaireService;
 
+    @Autowired
+    private AuthService authService;
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Commentaire create(@RequestParam("contenu") String contenu,@RequestParam("idRessource") Integer id_ressource,
@@ -64,7 +70,8 @@ public class CommentaireController {
         Commentaire commentaire = commentaireRepository.getReferenceById(id);
         String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
         Utilisateur utilisateur = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));
-        if(!utilisateur.getId().equals(commentaire.getUtilisateur().getId())){
+        utilisateur.getRole().setRoleGranted();
+        if(!authService.IsAuthorize(commentaire.getUtilisateur(),utilisateur,Arrays.asList(UserType.SUPER_ADMIN,UserType.ADMIN, UserType.MODERATEUR))){
             throw new Exception("l'utilisateur n'a pas le droit de modifier cette ressource");
         }
 
