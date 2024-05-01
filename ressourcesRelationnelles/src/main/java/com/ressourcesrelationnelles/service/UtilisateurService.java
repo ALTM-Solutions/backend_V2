@@ -50,6 +50,7 @@ public class UtilisateurService implements IUtilisateurService{
         return true;
     }
 
+    // Modification profil
     public Utilisateur createFromForm(String adresseMail,String oldAdresseMail, String nom, String prenom, MultipartFile file, String uri, String port) throws Exception{
         Utilisateur utilisateur = new Utilisateur();
         if(oldAdresseMail.equals(adresseMail)){
@@ -65,6 +66,7 @@ public class UtilisateurService implements IUtilisateurService{
         utilisateur.setPrenom(prenom);
         if(!file.isEmpty()){
             String fileType = fileStorageService.getFileType(file.getOriginalFilename());
+            // Permet de récupérer le type du fichier pour vérifier que ce soit bien une image qui soit insérer
             String[] splited = fileType.split("/");
             String type = splited[0];
             if(type.equals("image")) {

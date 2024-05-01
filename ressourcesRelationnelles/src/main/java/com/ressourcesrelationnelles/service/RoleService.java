@@ -19,7 +19,7 @@ public class RoleService implements IRoleService {
         }
     }
 
-
+    // Au lancement de l'application on crée les rôles par rapport à l'enum UserType (dossier Model)
     public void createAllUserType(){
         for(UserType type : UserType.values()){
             createIfNotExist(type);

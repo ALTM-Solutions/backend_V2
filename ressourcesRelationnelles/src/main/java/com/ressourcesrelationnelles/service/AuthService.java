@@ -58,6 +58,7 @@ public class AuthService {
                 user.setAdresseMail(registerData.getAdresseMail());
                 Role citizenRole = roleRepository.findByNom(userType.toString()).get(0);
                 user.setRole(citizenRole);
+                // Hash le mdp
                 user.setMotDePasse(passwordEncoder.encode(registerData.getPassword()));
                 user.setNom(registerData.getNom());
                 user.setPrenom(registerData.getPrenom());
@@ -70,7 +71,6 @@ public class AuthService {
                 throw new Exception("User exist");
             }
 
-
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
@@ -79,6 +79,5 @@ public class AuthService {
     public boolean IsAuthorize(Utilisateur user,Utilisateur userConnected, List<UserType> listRoleAccess){
         return userConnected.getId().equals(user.getId()) || listRoleAccess.contains(userConnected.getRole().getUserType());
     }
-
 
 }

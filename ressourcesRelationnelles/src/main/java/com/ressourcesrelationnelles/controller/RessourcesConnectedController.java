@@ -71,13 +71,13 @@ public class RessourcesConnectedController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Ressources create(@RequestParam("texte") String texte,@RequestParam("nomRessource") String nomRessource, @RequestHeader("Authorization") String token , @RequestParam("file")MultipartFile file){
-        String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
-        Utilisateur utilisateur = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));;
+        String email = jwtGenerator.getUsernameFromJWT(token.substring(7)); // Obtient le mail de l'utilisateur grâce au JWT
+        Utilisateur utilisateur = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found")); // Récupère l'utilisateur par son email
         CreatedRessourceDto ressourceDto = new CreatedRessourceDto();
         ressourceDto.setTexte(texte);
         ressourceDto.setNomRessource(nomRessource);
         ressourceDto.setIdUtilisateur(utilisateur.getId());
-        return ressourcesRepository.saveAndFlush(ressourcesService.createFromForm(ressourceDto,file,uri,port));
+        return ressourcesRepository.saveAndFlush(ressourcesService.createFromForm(ressourceDto,file,uri,port)); // Enregistre et renvoie la ressource
     }
 
     // Modification d'une ressource (nouveau texte et nouveau nom)

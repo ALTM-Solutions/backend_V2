@@ -53,6 +53,7 @@ public class FileStorageService {
 
         String filePath = this.storeFile(file);
         PieceJointe pieceJointe = new PieceJointe();
+        // Infos récupérées dans le application.properties grâce au "FileStorageProperties" qui est dans le package config
         String fileDownloadUri = uri +":" +  port +"/api/public/file/downloadFile/" + filePath;
         pieceJointe.setCheminPieceJointe(fileDownloadUri);
         return pieceJointeRepository.saveAndFlush(pieceJointe);
