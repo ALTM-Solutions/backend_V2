@@ -1,6 +1,5 @@
 package com.ressourcesrelationnelles.controller;
 
-import com.ressourcesrelationnelles.config.HostProperties;
 import com.ressourcesrelationnelles.model.Message;
 import com.ressourcesrelationnelles.repository.IMessageRepository;
 import com.ressourcesrelationnelles.service.MessageService;
@@ -18,15 +17,6 @@ public class MessageController {
     // TODO : Ici peut - être rajouter une suppression quand les message sont vieux de 1 jour,
     //  c'est du chat donc pas besoinn de conservé ?
 
-    private final String port;
-
-    private final String uri;
-    @Autowired
-    public MessageController(HostProperties hostProperties) {
-        this.port = hostProperties.getPort();
-        this.uri = hostProperties.getUri();
-    }
-
     @Autowired
     private IMessageRepository messageRepository;
 
@@ -39,7 +29,7 @@ public class MessageController {
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestParam("message") String message, @RequestParam("envoyeur") Integer id_envoyeur, @RequestParam("recepteur") Integer id_recepteur, @RequestParam("idRessource")Integer id_ressource, @RequestParam("file")MultipartFile file){
 
-        Message m = messageService.createFromForm(message,id_envoyeur,id_recepteur,id_ressource,file,uri,port);
+        Message m = messageService.createFromForm(message,id_envoyeur,id_recepteur,id_ressource,file);
         messageRepository.saveAndFlush(m);
 
     }

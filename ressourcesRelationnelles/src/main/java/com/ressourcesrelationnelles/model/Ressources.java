@@ -3,8 +3,6 @@ package com.ressourcesrelationnelles.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 import java.util.List;
@@ -55,6 +53,22 @@ public class Ressources {
     @JsonIgnore
     private List<Message> messages;
 
+    @ManyToMany(mappedBy = "favorite")
+    @JsonIgnore
+    private List<Utilisateur> utilisateursFavorite;
+
+    @ManyToMany(mappedBy = "misDeCote")
+    @JsonIgnore
+    private List<Utilisateur> utilisateursMisDeCote;
+
+    @ManyToMany(cascade = { CascadeType.DETACH })
+    @JoinTable(
+            name = "type_parcours_has_ressource",
+            joinColumns = { @JoinColumn(name = "ressource_id") },
+            inverseJoinColumns = { @JoinColumn(name = "type_parcours_id") }
+    )
+    private List<TypeParcours> typeParcours;
+
     //Constructeur sans les "List" pour le Create
     public Ressources(Integer id, Date datePublication, Date dateModification, String text, boolean visibilite, boolean valide, String nomRessource, Utilisateur utilisateur, PieceJointe pieceJointe) {
         this.id = id;
@@ -93,6 +107,22 @@ public class Ressources {
         this.pieceJointe = pieceJointe;
         this.progressions = progressions;
         this.messages = messages;
+    }
+
+    public List<Utilisateur> getUtilisateursFavorite() {
+        return utilisateursFavorite;
+    }
+
+    public void setUtilisateursFavorite(List<Utilisateur> utilisateursFavorite) {
+        this.utilisateursFavorite = utilisateursFavorite;
+    }
+
+    public List<Utilisateur> getUtilisateursMisDeCote() {
+        return utilisateursMisDeCote;
+    }
+
+    public void setUtilisateursMisDeCote(List<Utilisateur> utilisateursMisDeCote) {
+        this.utilisateursMisDeCote = utilisateursMisDeCote;
     }
 
     public Ressources() {
@@ -192,5 +222,13 @@ public class Ressources {
 
     public void setMessages(List<Message> messages) {
         this.messages = messages;
+    }
+
+    public List<TypeParcours> getTypeParcours() {
+        return typeParcours;
+    }
+
+    public void setTypeParcours(List<TypeParcours> typeParcours) {
+        this.typeParcours = typeParcours;
     }
 }

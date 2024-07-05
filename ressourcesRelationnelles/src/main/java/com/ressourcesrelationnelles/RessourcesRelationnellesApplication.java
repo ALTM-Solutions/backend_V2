@@ -1,7 +1,6 @@
 package com.ressourcesrelationnelles;
 
 import com.ressourcesrelationnelles.config.FileStorageProperties;
-import com.ressourcesrelationnelles.config.HostProperties;
 import com.ressourcesrelationnelles.dto.RegisterDto;
 import com.ressourcesrelationnelles.model.UserType;
 import com.ressourcesrelationnelles.service.AuthService;
@@ -17,8 +16,7 @@ import org.springframework.context.event.EventListener;
 @SpringBootApplication
 // Propriétés de configurations spécifiques
 @EnableConfigurationProperties({
-		FileStorageProperties.class,
-		HostProperties.class
+		FileStorageProperties.class
 })
 public class RessourcesRelationnellesApplication {
 

@@ -7,7 +7,6 @@ import com.ressourcesrelationnelles.repository.IRessourcesRepository;
 import com.ressourcesrelationnelles.repository.IUtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
@@ -24,7 +23,7 @@ public class MessageService {
     @Autowired
     private FileStorageService fileStorageService;
 
-    public Message createFromForm(String text_message, Integer id_envoyeur,Integer id_recepteur, Integer id_ressource,MultipartFile file,String uri, String port){
+    public Message createFromForm(String text_message, Integer id_envoyeur,Integer id_recepteur, Integer id_ressource,MultipartFile file){
         Message message = new Message();
         message.setMessage(text_message);
         message.setDateEnvoi(new Date());
@@ -35,7 +34,7 @@ public class MessageService {
         Ressources ressources = ressourcesRepository.getReferenceById(id_ressource);
         message.setRessources(ressources);
         if(!file.isEmpty()){
-            message.setPieceJointe(fileStorageService.createPieceJointe(file,uri,port));
+            message.setPieceJointe(fileStorageService.createPieceJointe(file));
         }
         return message;
 

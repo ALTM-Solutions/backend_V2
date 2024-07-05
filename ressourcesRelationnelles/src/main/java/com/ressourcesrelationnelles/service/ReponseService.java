@@ -22,7 +22,7 @@ public class ReponseService {
 
     @Autowired
     private IUtilisateurRepository utilisateurRepository;
-    public Reponse createFromForm(String text, Integer id_commentaire, Integer id_utilisateur,MultipartFile file, String uri, String port){
+    public Reponse createFromForm(String text, Integer id_commentaire, Integer id_utilisateur,MultipartFile file){
         Reponse reponse = new Reponse();
         reponse.setReponse(text);
         reponse.setDate(new Date());
@@ -31,7 +31,7 @@ public class ReponseService {
         Utilisateur utilisateur = utilisateurRepository.getReferenceById(id_utilisateur);
         reponse.setUtilisateur(utilisateur);
         if(!file.isEmpty()) {
-            reponse.setPieceJointe(fileStorageService.createPieceJointe(file, uri, port));
+            reponse.setPieceJointe(fileStorageService.createPieceJointe(file));
         }
         return reponse;
     }

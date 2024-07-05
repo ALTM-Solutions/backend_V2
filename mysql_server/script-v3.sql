@@ -316,12 +316,12 @@ CREATE TABLE IF NOT EXISTS `ressourcesrelationnelles`.`type_parcours_has_ressour
     FOREIGN KEY (`type_parcours_id`)
     REFERENCES `ressourcesrelationnelles`.`type_parcours` (`id`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION,
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_type_parcours_has_ressource_ressource1`
     FOREIGN KEY (`ressource_id`)
     REFERENCES `ressourcesrelationnelles`.`ressource` (`id`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION)
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;

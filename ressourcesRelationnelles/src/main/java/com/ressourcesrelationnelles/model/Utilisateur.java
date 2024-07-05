@@ -23,6 +23,7 @@ public class Utilisateur {
     private String prenom;
 
     @Column(name = "adresse_mail")
+    @JsonIgnore
     private String adresseMail;
 
     @Column(name = "mot_de_passe")
@@ -64,6 +65,27 @@ public class Utilisateur {
     @JsonIgnore
     private List<Message> messagesRecepteur;
 
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "favorite",
+            joinColumns = { @JoinColumn(name = "utilisateur_id") },
+            inverseJoinColumns = { @JoinColumn(name = "ressource_id") }
+    )
+    @JsonIgnore
+    private List<Ressources> favorite;
+
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "mis_de_cote",
+            joinColumns = { @JoinColumn(name = "utilisateur_id") },
+            inverseJoinColumns = { @JoinColumn(name = "ressource_id") }
+    )
+    @JsonIgnore
+    private List<Ressources> misDeCote;
+
+
     public Utilisateur() {
     }
 
@@ -100,6 +122,30 @@ public class Utilisateur {
         this.progressions = progressions;
         this.messagesEnvoyeur = messagesEnvoyeur;
         this.messagesRecepteur = messagesRecepteur;
+    }
+
+    public void addToFavorite(Ressources ressources){
+        this.favorite.add(ressources);
+    }
+
+    public void addToMisDeCote(Ressources ressources){
+        this.misDeCote.add(ressources);
+    }
+
+    public List<Ressources> getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(List<Ressources> favorite) {
+        this.favorite = favorite;
+    }
+
+    public List<Ressources> getMisDeCote() {
+        return misDeCote;
+    }
+
+    public void setMisDeCote(List<Ressources> misDeCote) {
+        this.misDeCote = misDeCote;
     }
 
     public Integer getId() {

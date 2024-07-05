@@ -1,6 +1,5 @@
 package com.ressourcesrelationnelles.controller;
 
-import com.ressourcesrelationnelles.config.HostProperties;
 import com.ressourcesrelationnelles.config.JwtGenerator;
 import com.ressourcesrelationnelles.model.Commentaire;
 import com.ressourcesrelationnelles.model.Reponse;
@@ -20,24 +19,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/citoyens/commentaire")
 @SecurityRequirement(name = "Authorization")
 public class CommentaireController {
 
-    // TODO : Supprimer le "idUtilisateur" il doit venir du Token
-
-    private final String port;
-
-    private final String uri;
-    @Autowired
-    public CommentaireController(HostProperties hostProperties) {
-        this.port = hostProperties.getPort();
-        this.uri = hostProperties.getUri();
-    }
     @Autowired
     private ICommentaireRepository commentaireRepository;
 
@@ -60,7 +47,7 @@ public class CommentaireController {
 
         String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
         Utilisateur utilisateur = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));;
-        Commentaire commentaire = commentaireService.createFromJson(contenu,id_ressource,utilisateur.getId(),file,uri,port);
+        Commentaire commentaire = commentaireService.createFromJson(contenu,id_ressource,utilisateur.getId(),file);
         return commentaireRepository.saveAndFlush(commentaire);
 
     }

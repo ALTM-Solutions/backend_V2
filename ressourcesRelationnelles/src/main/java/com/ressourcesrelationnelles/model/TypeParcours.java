@@ -3,13 +3,9 @@ package com.ressourcesrelationnelles.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "type_parcours")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -23,9 +19,9 @@ public class TypeParcours {
     @Column(name = "nom")
     private String nom;
 
-    @OneToMany(mappedBy = "typeParcours")
+    @ManyToMany(mappedBy = "typeParcours")
     @JsonIgnore
-    private List<Progression> progressions;
+    private List<Ressources> ressources;
 
     public TypeParcours(Integer id, String nom) {
         this.id = id;

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
-import java.util.Map;
 
 @Service
 public class CommentaireService {
@@ -23,7 +22,7 @@ public class CommentaireService {
     @Autowired
     private FileStorageService fileStorageService;
 
-    public Commentaire createFromJson(String contenu, Integer id_ressource,Integer id_utilisateur, MultipartFile file,String uri, String port){
+    public Commentaire createFromJson(String contenu, Integer id_ressource,Integer id_utilisateur, MultipartFile file){
         Commentaire commentaire = new Commentaire();
         commentaire.setContenu(contenu);
         Ressources ressources = ressourcesRepository.getReferenceById(id_ressource);
@@ -32,7 +31,7 @@ public class CommentaireService {
         commentaire.setUtilisateur(utilisateur);
         commentaire.setDateCommentaire(new Date());
         if(!file.isEmpty()) {
-            commentaire.setPieceJointe(fileStorageService.createPieceJointe(file, uri, port));
+            commentaire.setPieceJointe(fileStorageService.createPieceJointe(file));
         }
         return commentaire;
     }

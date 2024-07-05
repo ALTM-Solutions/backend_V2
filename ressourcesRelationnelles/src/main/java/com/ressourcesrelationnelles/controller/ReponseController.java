@@ -1,9 +1,7 @@
 package com.ressourcesrelationnelles.controller;
 
 
-import com.ressourcesrelationnelles.config.HostProperties;
 import com.ressourcesrelationnelles.config.JwtGenerator;
-import com.ressourcesrelationnelles.model.Commentaire;
 import com.ressourcesrelationnelles.model.Reponse;
 import com.ressourcesrelationnelles.model.UserType;
 import com.ressourcesrelationnelles.model.Utilisateur;
@@ -42,14 +40,6 @@ public class ReponseController {
     @Autowired
     private IUtilisateurRepository utilisateurRepository;
 
-    private final String port;
-
-    private final String uri;
-    @Autowired
-    public ReponseController(HostProperties hostProperties) {
-        this.port = hostProperties.getPort();
-        this.uri = hostProperties.getUri();
-    }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -57,7 +47,7 @@ public class ReponseController {
                        @RequestHeader("Authorization") String token, @RequestParam("file") MultipartFile file){
         String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
         Utilisateur utilisateur = utilisateurRepository.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));
-        Reponse reponse = reponseService.createFromForm(text, id_commentaire, utilisateur.getId(),file, uri, port);
+        Reponse reponse = reponseService.createFromForm(text, id_commentaire, utilisateur.getId(),file);
         return reponseRepository.saveAndFlush(reponse);
     }
 

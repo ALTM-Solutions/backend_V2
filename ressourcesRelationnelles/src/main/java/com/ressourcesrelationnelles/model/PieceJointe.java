@@ -3,17 +3,12 @@ package com.ressourcesrelationnelles.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "piece_jointe")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
 public class PieceJointe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +17,9 @@ public class PieceJointe {
 
     @Column(name = "chemin_piece_jointe")
     private String cheminPieceJointe;
+
+    @Column(name = "nom_origine")
+    private String nomOrigin;
 
     @OneToMany(mappedBy = "pieceJointe")
     @JsonIgnore
@@ -44,9 +42,17 @@ public class PieceJointe {
         this.cheminPieceJointe = cheminPieceJointe;
     }
 
+    public PieceJointe(Integer id, String cheminPieceJointe, String nomOrigin) {
+        this.id = id;
+        this.cheminPieceJointe = cheminPieceJointe;
+        this.nomOrigin = nomOrigin;
+    }
+
     public PieceJointe() {
 
     }
+
+
 
     public Integer getId() {
         return id;
@@ -62,6 +68,14 @@ public class PieceJointe {
 
     public void setCheminPieceJointe(String cheminPieceJointe) {
         this.cheminPieceJointe = cheminPieceJointe;
+    }
+
+    public String getNomOrigin() {
+        return nomOrigin;
+    }
+
+    public void setNomOrigin(String nomOrigin) {
+        this.nomOrigin = nomOrigin;
     }
 
     @Override

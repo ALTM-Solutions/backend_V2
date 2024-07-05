@@ -1,43 +1,25 @@
 package com.ressourcesrelationnelles.controller;
 
-import com.ressourcesrelationnelles.config.HostProperties;
 import com.ressourcesrelationnelles.config.JwtGenerator;
 import com.ressourcesrelationnelles.model.UserType;
 import com.ressourcesrelationnelles.model.Utilisateur;
 import com.ressourcesrelationnelles.repository.IUtilisateurRepository;
 import com.ressourcesrelationnelles.service.AuthService;
 import com.ressourcesrelationnelles.service.FileStorageService;
-import com.ressourcesrelationnelles.service.IUtilisateurService;
 import com.ressourcesrelationnelles.service.UtilisateurService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.annotation.security.RolesAllowed;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Role;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/citoyens/utilisateur")
 @SecurityRequirement(name = "Authorization")
 public class UtilisateurController {
-
-    private final String port;
-
-    private final String uri;
-    @Autowired
-    public UtilisateurController(HostProperties hostProperties) {
-        this.port = hostProperties.getPort();
-        this.uri = hostProperties.getUri();
-    }
 
     @Autowired
     private IUtilisateurRepository utilisateurRepository;
@@ -61,7 +43,7 @@ public class UtilisateurController {
     }
 
     @RequestMapping(value = "{id}",method= RequestMethod.PUT)
-    public Utilisateur update(@PathVariable Integer id, @RequestParam("adresseMail") String adresseMail,@RequestParam("nom") String nom,@RequestParam("prenom") String prenom
+    public Utilisateur update(@PathVariable Integer id,@RequestParam("nom") String nom,@RequestParam("prenom") String prenom
                                 ,@RequestParam("file") MultipartFile file,@RequestParam("deleteOldFile") Boolean deleteOldFile,
                                 @RequestHeader("Authorization") String token) throws Exception {
 
@@ -72,7 +54,7 @@ public class UtilisateurController {
         Utilisateur existingUtilisateur = utilisateurRepository.getReferenceById(id);
         if(utilisateurConnect.getId().equals(existingUtilisateur.getId()) || utilisateurConnect.getRole().getUserType().equals(UserType.ADMIN)){
             // On crée l'objet à modifier(nouvelles valeurs)
-            Utilisateur utilisateur = utilisateurService.createFromForm(adresseMail,existingUtilisateur.getAdresseMail(), nom, prenom,file,uri,port);
+            Utilisateur utilisateur = utilisateurService.createFromForm(existingUtilisateur.getAdresseMail(), nom, prenom,file);
             if(deleteOldFile){
                if(existingUtilisateur.getCheminPhotoProfil() != null && !existingUtilisateur.getCheminPhotoProfil().isEmpty()){
                    fileStorageService.deleteFileFromUrl(existingUtilisateur.getCheminPhotoProfil());
@@ -91,7 +73,6 @@ public class UtilisateurController {
                 }
                 existingUtilisateur.setCheminPhotoProfil(utilisateur.getCheminPhotoProfil());
             }
-            existingUtilisateur.setAdresseMail(utilisateur.getAdresseMail());
             return utilisateurRepository.saveAndFlush(existingUtilisateur);
         }else{
             throw new Exception("Not allowed to edit this user");

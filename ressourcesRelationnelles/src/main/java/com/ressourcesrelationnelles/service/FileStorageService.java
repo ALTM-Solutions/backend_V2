@@ -2,7 +2,6 @@ package com.ressourcesrelationnelles.service;
 
 
 import com.ressourcesrelationnelles.config.FileStorageProperties;
-import com.ressourcesrelationnelles.config.HostProperties;
 import com.ressourcesrelationnelles.exception.FileStorageException;
 import com.ressourcesrelationnelles.exception.MyFileNotFoundException;
 import com.ressourcesrelationnelles.model.PieceJointe;
@@ -49,16 +48,18 @@ public class FileStorageService {
         }
     }
 
-    public PieceJointe createPieceJointe(MultipartFile file,String uri,String port){
+    public PieceJointe createPieceJointe(MultipartFile file){
 
         String filePath = this.storeFile(file);
         PieceJointe pieceJointe = new PieceJointe();
         // Infos récupérées dans le application.properties grâce au "FileStorageProperties" qui est dans le package config
-        String fileDownloadUri = uri +":" +  port +"/api/public/file/downloadFile/" + filePath;
-        pieceJointe.setCheminPieceJointe(fileDownloadUri);
+        pieceJointe.setCheminPieceJointe(filePath);
+        pieceJointe.setNomOrigin(this.getOrigineFileName(file));
         return pieceJointeRepository.saveAndFlush(pieceJointe);
 
     }
+
+
     public String getFileType(String filename){
         try {
             String[] elements = filename.split("\\.");
@@ -131,6 +132,30 @@ public class FileStorageService {
             return "application/octet-stream";
         }
     }
+
+    public String getOrigineFileName(MultipartFile file){
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String[] e = fileName.split("\\.");
+        String extension = e[e.length - 1];
+        if(extension.equals("png") || extension.equals("jpg") || extension.equals("jpeg") || extension.equals("bmp")){
+            String[] elements = fileName.split("\\.");
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < elements.length - 1; i++) {
+                sb.append(elements[i]);
+                if (i != elements.length - 2) {
+                    sb.append(".");
+                }
+            }
+            sb.append(".webp");
+
+            return sb.toString();
+
+        }else{
+            return fileName;
+        }
+    }
+
     public String storeFile(MultipartFile file) {
 
         try {
@@ -141,14 +166,7 @@ public class FileStorageService {
             }
 
             String[] elements = fileName.split("\\.");
-            StringBuilder sb = new StringBuilder();
 
-            for (int i = 0; i < elements.length - 1; i++) {
-                sb.append(elements[i]);
-                if (i != elements.length - 2) {
-                    sb.append(" ");
-                }
-            }
             String extension = elements[elements.length -1];
 
             // rename file to get unique name
@@ -174,6 +192,7 @@ public class FileStorageService {
     public Resource loadFileAsResource(String fileName) {
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            System.out.println(filePath.toUri());
             Resource resource = new UrlResource(filePath.toUri());
             if(resource.exists()) {
                 return resource;
@@ -185,7 +204,16 @@ public class FileStorageService {
         }
     }
 
-    public String deleteFile(String fileName){
+    public String getOrigineNameIfExist(String fileName){
+        try {
+            PieceJointe pieceJointe = pieceJointeRepository.findByCheminPieceJointe(fileName);
+            return pieceJointe.getNomOrigin();
+        }catch (Exception e){
+            return fileName;
+        }
+    }
+
+    public void deleteFile(String fileName){
 
         Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
 
@@ -194,11 +222,7 @@ public class FileStorageService {
 
             if(filePath.getFileName().toString().contains(".")) {
 
-                if(Files.deleteIfExists(filePath)){
-
-                    return fileName + ", deleted.";
-
-                }else{
+                if(!Files.deleteIfExists(filePath)){
 
                     throw new FileNotFoundException("file : " + fileName + ", not found.");
 
@@ -227,7 +251,6 @@ public class FileStorageService {
                         Files.deleteIfExists(path);
 
                     }
-                    return nameFile + " deleted.";
                 }else{
                     throw new FileNotFoundException("files : " + nameFile + ", not found.");
                 }
