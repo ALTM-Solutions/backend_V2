@@ -22,13 +22,15 @@ jobs:
           java-version: '21'
 
       - name: Build with Maven
-        run: mvn clean install
+        run: |
+        cd ./ressourcesrelationnelles 
+        mvn clean install
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: '${{ github.workspace }}/ressourcesRelationnelles/target/*.jar'
 
   deploy:
     runs-on: ubuntu-latest
