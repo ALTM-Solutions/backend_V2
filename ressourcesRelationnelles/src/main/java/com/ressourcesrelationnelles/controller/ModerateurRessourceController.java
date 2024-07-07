@@ -8,12 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+// @RestController : Rassemble 2 annotations @Controller et @ResponseBody. Défini à Spring que toutes les méthodes renvoient une réponse au client
 @RestController
 @RequestMapping("/api/moderateur/ressources")
 @SecurityRequirement(name = "Authorization")
 public class ModerateurRessourceController {
 
+    /*
+       Ce controller permet d'activer ou désactiver une ressource
+    */
 
     @Autowired
     private RessourcesService ressourcesService;

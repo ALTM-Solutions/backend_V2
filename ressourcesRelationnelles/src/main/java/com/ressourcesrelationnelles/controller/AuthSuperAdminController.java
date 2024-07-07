@@ -21,10 +21,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// @RestController : Rassemble 2 annotations @Controller et @ResponseBody. Défini à Spring que toutes les méthodes renvoient une réponse au client
 @RestController
 // Route
 @RequestMapping("api/super-admin/")
 public class AuthSuperAdminController {
+
+    /*
+        Ce controller permet la création admin/modérateur et super admin par le super admin
+     */
 
     @Autowired
     private IUtilisateurRepository userRepo;

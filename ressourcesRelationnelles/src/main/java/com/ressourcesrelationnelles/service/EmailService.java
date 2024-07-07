@@ -36,7 +36,7 @@ public class EmailService {
     public void sendEmailWithNewPassword(String email, String password){
         CompletableFuture.runAsync(() -> {
             String bodyMail = "Voici votre nouveau mot de passe :\n\n" + password + "\n\nIl est recommandé de changer le mot de passe après votre première connexion.";
-            this.sendEmail(email, "[ReSource-Relationnelles] Reinitialisation password", bodyMail);
+            this.sendEmail(email, "[ReSource-Relationnelles] Réinitialisation du mot de passe", bodyMail);
         });
     }
 

@@ -20,8 +20,6 @@ public class UtilisateurService implements IUtilisateurService{
     @Autowired
     private FileStorageService fileStorageService;
 
-    // TODO : implémenter cette fonction dans le register et le update utilisateur
-
 
     // Modification profil
     public Utilisateur createFromForm(String adresseMail,String nom, String prenom, MultipartFile file) throws Exception{

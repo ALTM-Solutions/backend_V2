@@ -5,7 +5,12 @@ import com.ressourcesrelationnelles.model.Ressources;
 import com.ressourcesrelationnelles.model.TypeParcours;
 
 import java.util.List;
-
+/*
+Un DTO :
+    Permet d'avoir un "template" de données
+    Comme une capsule avec un moule prédéfinit, on le remplit et on sait que quand on le transfert à quelqu'un il est sûr de ce qu'il y a dedans
+    Quand donnée à un controller, peut aussi générer le JSON par rapport au DTO
+ */
 public class RessourceConnectedDto {
     private Ressources ressources;
 

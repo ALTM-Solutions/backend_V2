@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-
+// @RestController : Rassemble 2 annotations @Controller et @ResponseBody. Défini à Spring que toutes les méthodes renvoient une réponse au client
 @RestController
 @RequestMapping("api/public/type-parcours")
 public class TypeParcoursController {
+
+    /*
+       Ce controller permet d'obtenir les collcetions/type parcours
+    */
 
     @Autowired
     private TypeParcoursService typeParcoursService;

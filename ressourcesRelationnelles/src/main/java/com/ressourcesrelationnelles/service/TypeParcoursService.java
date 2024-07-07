@@ -15,12 +15,15 @@ public class TypeParcoursService {
     @Autowired
     private ITypeParcoursRepository typeParcoursRepository;
 
+    @Autowired
+    private UtilsService utils;
+
     public boolean createTypeParcours(String nom){
 
-        if(!typeParcoursRepository.existsByNom(nom)){
+        if(!typeParcoursRepository.existsByNom(utils.escapeHtml(nom))){
 
             TypeParcours typeParcours = new TypeParcours();
-            typeParcours.setNom(nom);
+            typeParcours.setNom(utils.escapeHtml(nom));
 
             typeParcoursRepository.saveAndFlush(typeParcours);
             return true;
@@ -31,9 +34,9 @@ public class TypeParcoursService {
 
     public void updateTypeParcours(String nom, Integer id) throws Exception{
 
-        if(!typeParcoursRepository.existsByNom(nom)){
+        if(!typeParcoursRepository.existsByNom(utils.escapeHtml(nom))){
             TypeParcours typeParcours = typeParcoursRepository.getReferenceById(id);
-            typeParcours.setNom(nom);
+            typeParcours.setNom(utils.escapeHtml(nom));
             typeParcoursRepository.saveAndFlush(typeParcours);
 
         }else{

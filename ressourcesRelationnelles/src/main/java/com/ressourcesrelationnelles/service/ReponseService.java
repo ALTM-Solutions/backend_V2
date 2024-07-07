@@ -22,9 +22,13 @@ public class ReponseService {
 
     @Autowired
     private IUtilisateurRepository utilisateurRepository;
+
+    @Autowired
+    private UtilsService utils;
+
     public Reponse createFromForm(String text, Integer id_commentaire, Integer id_utilisateur,MultipartFile file){
         Reponse reponse = new Reponse();
-        reponse.setReponse(text);
+        reponse.setReponse(utils.escapeHtml(text));
         reponse.setDate(new Date());
         Commentaire commentaire = commentaireRepository.getReferenceById(id_commentaire);
         reponse.setCommentaire(commentaire);
@@ -35,6 +39,5 @@ public class ReponseService {
         }
         return reponse;
     }
-
 
 }

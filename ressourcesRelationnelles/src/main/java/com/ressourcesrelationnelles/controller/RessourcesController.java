@@ -12,28 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+// @RestController : Rassemble 2 annotations @Controller et @ResponseBody. Défini à Spring que toutes les méthodes renvoient une réponse au client
 @RestController
 @RequestMapping("/api/public/ressources")
 @SecurityRequirement(name = "Authorization")
 public class RessourcesController {
-    @Autowired
-    private IRessourcesRepository ressourcesRepository;
 
+    /*
+       Ce controller permet de récupérer les ressources
+    */
+    
     @Autowired
     private RessourcesService ressourcesService;
-
-    @Autowired
-    private JwtGenerator jwtGenerator;
-
-    @Autowired
-    private IUtilisateurRepository utilisateurRepository;
-
-    @Autowired
-    private FileStorageService fileStorageService;
-
-    @Autowired
-    private IPieceJointeRepository pieceJointeRepository;
 
     @GetMapping
     public List<RessourcesNotConnectedDto> getAll(){

@@ -7,10 +7,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// @RestController : Rassemble 2 annotations @Controller et @ResponseBody. Défini à Spring que toutes les méthodes renvoient une réponse au client
 @RestController
 @RequestMapping("api/admin/type-parcours")
 public class AdminTypeParcoursController {
 
+
+    /*
+        Ce controller permet à l'administrateur/super admin de créer/obtenir/supprimer des types de parcours (collections)
+     */
 
     @Autowired
     private TypeParcoursService typeParcoursService;

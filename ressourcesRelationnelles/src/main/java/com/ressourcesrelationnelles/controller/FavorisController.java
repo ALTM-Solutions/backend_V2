@@ -18,6 +18,9 @@ import java.util.List;
 @SecurityRequirement(name = "Authorization")
 public class FavorisController {
 
+    /*
+        Ce controller permet d'ajouter ou retirer (supprimer) une ressource en favoris
+     */
 
     @Autowired
     private RessourcesService ressourcesService;

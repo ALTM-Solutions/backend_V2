@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
-
+// @RestController : Rassemble 2 annotations @Controller et @ResponseBody. Défini à Spring que toutes les méthodes renvoient une réponse au client
 @RestController
 @RequestMapping("/api/citoyens/reponse")
 @SecurityRequirement(name = "Authorization")
 public class ReponseController {
-
+    /*
+       Ce controller permet d'ajouter/modifier/supprimer une réponse
+    */
     @Autowired
     private IReponseRepository reponseRepository;
 

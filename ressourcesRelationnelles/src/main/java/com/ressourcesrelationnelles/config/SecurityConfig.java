@@ -49,23 +49,6 @@ public class SecurityConfig {
                 .httpBasic();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
-//        http
-//                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-//                .cors(cors -> {})
-//                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(jwtAuthEntryPoint))
-//                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeRequests(authorizeRequests -> authorizeRequests
-//                        .requestMatchers("/api/citoyens/**").hasAnyAuthority(UserType.CITIZEN.toString(),UserType.ADMIN.toString(),UserType.SUPER_ADMIN.toString(),UserType.MODERATEUR.toString())
-//                        .requestMatchers("/api/admin/**").hasAnyAuthority(UserType.ADMIN.toString(),UserType.SUPER_ADMIN.toString())
-//                        .requestMatchers("/api/moderateur/**").hasAnyAuthority(UserType.MODERATEUR.toString(),UserType.ADMIN.toString(),UserType.SUPER_ADMIN.toString())
-//                        .requestMatchers("/api/super-admin/**").hasAnyAuthority(UserType.SUPER_ADMIN.toString())
-//                        .requestMatchers("/api/public/**").permitAll()
-//                        .requestMatchers("/swagger-ui/**").permitAll()
-//                        .requestMatchers("/api-docs/**").permitAll()
-//                        .anyRequest().authenticated())
-//                .httpBasic(httpBasic -> {});
-//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-//        return http.build();
     }
 
     @Bean

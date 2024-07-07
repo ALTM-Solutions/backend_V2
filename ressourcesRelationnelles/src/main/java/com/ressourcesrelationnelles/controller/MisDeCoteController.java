@@ -12,11 +12,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// @RestController : Rassemble 2 annotations @Controller et @ResponseBody. Défini à Spring que toutes les méthodes renvoient une réponse au client
 @RestController
 @RequestMapping("/api/citoyens/mis-de-cote")
 @SecurityRequirement(name = "Authorization")
 public class MisDeCoteController {
 
+    /*
+       Ce controller permet d'ajouter ou retirer (supprimer) une ressource des "mis de coté"
+    */
 
     @Autowired
     private RessourcesService ressourcesService;

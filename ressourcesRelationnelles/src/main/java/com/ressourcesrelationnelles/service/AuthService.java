@@ -58,6 +58,10 @@ public class AuthService {
     @Autowired
     private JwtGenerator jwtGenerator;
 
+    @Autowired
+    private UtilsService utils;
+
+    // Vérification du mot de passe : Taille minimale définie dans les constantes, au moins une majuscule, une minuscule, un chiffre et un caractère spécial
     public Boolean isSecuredPassword(String password){
         if (password.length() <= SecurityConstants.PASSWORD_SIZE) {
             return false;
@@ -88,8 +92,8 @@ public class AuthService {
             user.setRole(citizenRole);
             // Hash le mdp
             user.setMotDePasse(validateUser.getPassword());
-            user.setNom(validateUser.getNom());
-            user.setPrenom(validateUser.getPrenom());
+            user.setNom(utils.escapeHtml(validateUser.getNom()));
+            user.setPrenom(utils.escapeHtml(validateUser.getPrenom()));
             user.setCheminPhotoProfil("");
             user.setDateDesactive(new Date(0));
             userRepo.saveAndFlush(user);
@@ -100,6 +104,7 @@ public class AuthService {
         }
     }
 
+    // Récupérer l'utilisateur grâce au token
     public Utilisateur getUserByToken(String token){
         String email = jwtGenerator.getUsernameFromJWT(token.substring(7));
         Utilisateur utilisateur = userRepo.findByAdresseMail(email).orElseThrow(()-> new UsernameNotFoundException("Username "+ email + "not found"));
@@ -107,6 +112,7 @@ public class AuthService {
         return utilisateur;
     }
 
+    // Cette fonction créée un "validation_utilisateur" et envoie un code de création à l'adresse mail indiquée
     public void createValidateUserAndSendMail(RegisterDto registerData) throws Exception{
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(regex);
@@ -118,15 +124,17 @@ public class AuthService {
             throw new Exception("Mot de passe non valide");
         }
         try{
-            // Vérification si un code existe déjà pour cette utilisateur
+            // Vérification si un code existe déjà pour cet utilisateur pour ne garder actif que le dernier code
             if(validationUtilisateurRepository.existsByEmail(registerData.getAdresseMail())){
                 validationUtilisateurRepository.delete(validationUtilisateurRepository.findByEmail(registerData.getAdresseMail()));
             }
             ValidationUtilisateur validationUtilisateur = new ValidationUtilisateur();
+            // On stock les informations de création de compte
             validationUtilisateur.setEmail(registerData.getAdresseMail());
             validationUtilisateur.setPassword(passwordEncoder.encode(registerData.getPassword()));
-            validationUtilisateur.setNom(registerData.getNom());
-            validationUtilisateur.setPrenom(registerData.getPrenom());
+            validationUtilisateur.setNom(utils.escapeHtml(registerData.getNom()));
+            validationUtilisateur.setPrenom(utils.escapeHtml(registerData.getPrenom()));
+            // Création du code de validation
             String code = generateCode();
             validationUtilisateur.setCode(code);
             // Création date expiration
@@ -145,6 +153,7 @@ public class AuthService {
 
     }
 
+    // Cette fonction permet de générer un mot de passe aléatoire
     private String generateRandomPassword(){
         StringBuilder password = new StringBuilder(8);
         for (int i = 0; i < 8 - 4; i++) {
@@ -162,6 +171,9 @@ public class AuthService {
 
     public void resetPassword(String email) throws Exception{
         if(userRepo.existsByAdresseMail(email)){
+            if(email.equals("super-z@admin.fr")){
+                throw new Exception("this user can't update password by this way!");
+            }
             String newPassword = generateRandomPassword();
             try{
                 Utilisateur user = userRepo.findByAdresseMail(email).orElseThrow();
@@ -176,13 +188,14 @@ public class AuthService {
         }
     }
 
+    // Permet d'avoir le code de validation de l'utilisateur
     private String generateCode(){
         String code = UUID.randomUUID().toString();
         return code.substring(0,SecurityConstants.VALIDATION_CODE_SIZE).replaceAll("-","0");
     }
 
     public Utilisateur createUser(RegisterDto registerData, UserType userType) throws Exception {
-        // Vérification inutile car se sont des utilisateur créer par le super-admin
+        // Vérification inutile car ce sont des utilisateurs crées par le super-admin
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(registerData.getAdresseMail());

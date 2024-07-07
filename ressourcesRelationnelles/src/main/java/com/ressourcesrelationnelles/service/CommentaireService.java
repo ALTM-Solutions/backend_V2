@@ -22,17 +22,22 @@ public class CommentaireService {
     @Autowired
     private FileStorageService fileStorageService;
 
-    public Commentaire createFromJson(String contenu, Integer id_ressource,Integer id_utilisateur, MultipartFile file){
+    @Autowired
+    private UtilsService utils;
+
+    // Historiquement on utilisait du json mais plus maintenant...
+    public Commentaire createFromJson(String contenu, Integer id_ressource, Integer id_utilisateur, MultipartFile file) {
         Commentaire commentaire = new Commentaire();
-        commentaire.setContenu(contenu);
+        commentaire.setContenu(utils.escapeHtml(contenu));
         Ressources ressources = ressourcesRepository.getReferenceById(id_ressource);
         commentaire.setRessources(ressources);
         Utilisateur utilisateur = utilisateurRepository.getReferenceById(id_utilisateur);
         commentaire.setUtilisateur(utilisateur);
         commentaire.setDateCommentaire(new Date());
-        if(!file.isEmpty()) {
+        if (!file.isEmpty()) {
             commentaire.setPieceJointe(fileStorageService.createPieceJointe(file));
         }
         return commentaire;
     }
 }
+

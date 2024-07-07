@@ -15,11 +15,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
-
+// @RestController : Rassemble 2 annotations @Controller et @ResponseBody. Défini à Spring que toutes les méthodes renvoient une réponse au client
 @RestController
 @RequestMapping("/api/citoyens/utilisateur")
 @SecurityRequirement(name = "Authorization")
 public class UtilisateurController {
+
+    /*
+       Ce controller permet de modifier les informations utilisateur / modification mot de passe et informations utilisateur
+    */
 
     @Autowired
     private IUtilisateurRepository utilisateurRepository;

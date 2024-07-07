@@ -12,6 +12,7 @@ public class SchedulerService {
     @Autowired
     private IValidationUtilisateurRepository validationUtilisateurRepository;
 
+    // Permet la suppression des utilisateur en attente de validation
     public void deleteExpiredValidationRepository(){
         validationUtilisateurRepository.deleteByDateExpirationLessThan(LocalDateTime.now());
     }

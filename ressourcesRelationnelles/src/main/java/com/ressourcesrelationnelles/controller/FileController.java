@@ -13,11 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-
+// @RestController : Rassemble 2 annotations @Controller et @ResponseBody. Défini à Spring que toutes les méthodes renvoient une réponse au client
 @RestController
 @RequestMapping("/api/public/file")
-@SecurityRequirement(name = "Authorization")
 public class FileController {
+
+    /*
+        Ce controller permet le téléchargement des fichiers de ressources
+     */
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 

@@ -28,6 +28,8 @@ public class RessourcesService implements IRessourcesService {
     @Autowired
     private IUtilisateurRepository utilisateurRepository;
 
+    @Autowired
+    private UtilsService utils;
 
 
     private Progression getProgressUser(Ressources ressources,Utilisateur utilisateur){
@@ -136,13 +138,13 @@ public class RessourcesService implements IRessourcesService {
 
     public Ressources createFromForm(CreatedRessourceDto ressourceDto, MultipartFile file,List<TypeParcours> listTypeParcours){
         Ressources ressources = new Ressources();
-        ressources.setNomRessource(ressourceDto.getNomRessource());
+        ressources.setNomRessource(utils.escapeHtml(ressourceDto.getNomRessource()));
         if(!file.isEmpty()) {
             ressources.setPieceJointe(fileStorageService.createPieceJointe(file));
         }else{
             ressources.setPieceJointe(null);
         }
-        ressources.setText(ressourceDto.getTexte());
+        ressources.setText(utils.escapeHtml(ressourceDto.getTexte()));
         ressources.setUtilisateur(utilisateurRepository.getReferenceById(ressourceDto.getIdUtilisateur()));
         ressources.setDatePublication(new Date());
         ressources.setDateModification(new Date());
@@ -153,8 +155,8 @@ public class RessourcesService implements IRessourcesService {
 
     public Ressources createFromForm(CreatedRessourceDto ressourceDto){
         Ressources ressources = new Ressources();
-        ressources.setNomRessource(ressourceDto.getNomRessource());
-        ressources.setText(ressourceDto.getTexte());
+        ressources.setNomRessource(utils.escapeHtml(ressourceDto.getNomRessource()));
+        ressources.setText(utils.escapeHtml(ressourceDto.getTexte()));
         ressources.setUtilisateur(utilisateurRepository.getReferenceById(ressourceDto.getIdUtilisateur()));
         ressources.setDatePublication(new Date());
         ressources.setDateModification(new Date());
@@ -209,13 +211,14 @@ public class RessourcesService implements IRessourcesService {
     public Ressources createRessources(Utilisateur utilisateur, String texte, String nomRessource, MultipartFile file, List<TypeParcours> listTypeParcours){
 
         CreatedRessourceDto ressourceDto = new CreatedRessourceDto();
-        ressourceDto.setTexte(texte);
-        ressourceDto.setNomRessource(nomRessource);
+        ressourceDto.setTexte(utils.escapeHtml(texte));
+        ressourceDto.setNomRessource(utils.escapeHtml(nomRessource));
         ressourceDto.setIdUtilisateur(utilisateur.getId());
 
         return ressourcesRepository.saveAndFlush(this.createFromForm(ressourceDto,file, listTypeParcours));
 
     }
+
 
 
 }

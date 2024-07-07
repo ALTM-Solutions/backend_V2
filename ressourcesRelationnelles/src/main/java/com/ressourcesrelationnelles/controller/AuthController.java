@@ -25,11 +25,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 
+// @RestController : Rassemble 2 annotations @Controller et @ResponseBody. Défini à Spring que toutes les méthodes renvoient une réponse au client
 @RestController
 // Route
 @RequestMapping("api/public/")
 public class AuthController {
-    // Permet de faire de l'injection de dépendances => simplifie le code, le rend + fiable et + facile à tester
+
+    /*
+        Ce controller permet la création de compte et la validation de compte après l'envoie de mail + reset password
+     */
+
+    // Autowired : Permet de faire de l'injection de dépendances => simplifie le code, le rend + fiable et + facile à tester
     @Autowired
     private IUtilisateurRepository userRepo;
 

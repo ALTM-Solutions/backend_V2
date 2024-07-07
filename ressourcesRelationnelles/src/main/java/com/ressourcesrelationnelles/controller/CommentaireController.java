@@ -20,11 +20,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 
+// @RestController : Rassemble 2 annotations @Controller et @ResponseBody. Défini à Spring que toutes les méthodes renvoient une réponse au client
 @RestController
 @RequestMapping("/api/citoyens/commentaire")
 @SecurityRequirement(name = "Authorization")
 public class CommentaireController {
 
+    /*
+        Ce controller permet La création / suppression des commentaires utilisateur
+    */
     @Autowired
     private ICommentaireRepository commentaireRepository;
 

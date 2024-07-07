@@ -19,11 +19,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
-
+// @RestController : Rassemble 2 annotations @Controller et @ResponseBody. Défini à Spring que toutes les méthodes renvoient une réponse au client
 @RestController
 @RequestMapping("/api/citoyens/ressources")
 @SecurityRequirement(name = "Authorization")
 public class RessourcesConnectedController {
+
+    /*
+       Ce controller permet d'ajouter/modifier/supprimer une ressource
+    */
     @Autowired
     private IRessourcesRepository ressourcesRepository;
 

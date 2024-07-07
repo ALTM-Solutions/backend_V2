@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.List;
-
+// Entity :  C’est une annotation JPA utilisée pour marquer une classe comme représentant une table dans une base de données. Chaque instance de la classe représente une ligne dans cette table.
 @Entity
 @Table(name = "ressource")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

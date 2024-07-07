@@ -14,11 +14,15 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+// @RestController : Rassemble 2 annotations @Controller et @ResponseBody. Défini à Spring que toutes les méthodes renvoient une réponse au client
 @RestController
 // Route
 @RequestMapping("api/admin/utilisateur")
 public class AdminUtilisateurController {
 
+    /*
+        Ce controller permet à l'administrateur/super admin de désactiver et activer un compte utilisateur
+     */
     @Autowired
     private IUtilisateurRepository utilisateurRepository;
 

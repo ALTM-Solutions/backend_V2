@@ -3,7 +3,7 @@ package com.ressourcesrelationnelles.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-
+// Entity :  C’est une annotation JPA utilisée pour marquer une classe comme représentant une table dans une base de données. Chaque instance de la classe représente une ligne dans cette table.
 @Entity
 @Table(name = "progression")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
